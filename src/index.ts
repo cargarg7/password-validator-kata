@@ -1,49 +1,28 @@
-const MIN_LENGTH = 6;
-const AT_LEAST_ONE_NUMBER_REGEX = /(.*[0-9].*)/;
-const AT_LEAST_ONE_UPPER_CASE_REGEX = /(.*[A-Z].*)/;
-const AT_LEAST_ONE_LOWER_CASE_REGEX = /(.*[a-z].*)/;
-const AT_LEAST_ONE_UNDERSCORE_REGEX = /(.*_.*)/;
+import { PasswordValidatorResponse } from './types';
+import { ValidationRules } from './validate-rules/types';
+import { validateEmptyRule } from './validate-rules/empty-rule';
+import { validateMinLength } from './validate-rules/min-length-rule';
+import { validateHasNumber } from './validate-rules/has-number-rule';
+import { validateHasUppercase } from './validate-rules/has-upper-case-rule';
+import { validateHasLowercase } from './validate-rules/has-lower-case-rule';
+import { validateHasUnderscore } from './validate-rules/has-underscore-rule';
 
-type PasswordValidatorResponse = {
-	status: boolean;
-	errorMessages?: string[];
-};
+function compose(...fns) {
+	return (initialVal) => fns.reduceRight((val, fn) => fn(val), initialVal);
+}
 
 export function passwordValidator(payload?: string): PasswordValidatorResponse {
-	const messages: string[] = [];
-	// Main Validation
-	if (!payload) {
-		return {
-			status: false,
-			errorMessages: ['Empty password is not valid'],
-		};
-	}
-
-	// Rest of validations
-	if (payload.length < MIN_LENGTH) {
-		messages.push('Length must be greater or equalo to 6');
-	}
-	if (!AT_LEAST_ONE_NUMBER_REGEX.test(payload)) {
-		messages.push('Must be contain at least one number');
-	}
-	if (!AT_LEAST_ONE_UPPER_CASE_REGEX.test(payload)) {
-		messages.push('Must be contain at least one upper case');
-	}
-	if (!AT_LEAST_ONE_LOWER_CASE_REGEX.test(payload)) {
-		messages.push('Must be contain at least one lower case');
-	}
-	if (!AT_LEAST_ONE_UNDERSCORE_REGEX.test(payload)) {
-		messages.push('Must be contain at least one underscore');
-	}
-
-	if (messages.length) {
-		return {
-			status: false,
-			errorMessages: messages,
-		};
-	}
+	const { status, errorMessages }: ValidationRules = compose(
+		validateHasUnderscore,
+		validateHasLowercase,
+		validateHasUppercase,
+		validateHasNumber,
+		validateMinLength,
+		validateEmptyRule
+	)({ payload });
 
 	return {
-		status: true,
+		status,
+		...(errorMessages?.length && { errorMessages }),
 	};
 }
