@@ -6,5 +6,7 @@ describe('Password Validator', () => {
 		expect(() => passwordValidator('')).toThrow('Empty password is not valid');
 	});
 
-    if ()
+	it('Should get ERROR when length is lower than 6 chars', () => {
+		expect(() => passwordValidator('abcde')).toThrow('Length must be greater or equalo to 6');
+	});
 });
