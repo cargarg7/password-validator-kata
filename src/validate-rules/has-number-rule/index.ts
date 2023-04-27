@@ -1,17 +1,10 @@
-import { ErrorMessage, AT_LEAST_ONE_NUMBER_REGEX } from './enums';
+import { ErrorMessage } from './enums';
+import { isNumberError } from './is-number';
 import { ValidationRules } from '../types';
-import { statusByErrorAndPreviousState } from '../helpers/status.helper';
-import { errorMessagesByErrorAndPreviousState } from '../helpers/error-messages.helper';
+import { validateResponseDecorator } from '../helpers/validator-response.helper';
 
-function isNumberError(payload?: string): boolean {
-	return payload && !AT_LEAST_ONE_NUMBER_REGEX.test(payload);
-}
-
-export function validateHasNumber({ payload, status, errorMessages }: ValidationRules): ValidationRules {
-	const error = isNumberError(payload);
-	return {
-		payload,
-		status: statusByErrorAndPreviousState(error, status),
-		errorMessages: errorMessagesByErrorAndPreviousState(error, ErrorMessage, errorMessages),
-	};
+export function validateHasNumber(data: ValidationRules): ValidationRules {
+	const { payload } = data;
+	const hasError = isNumberError(payload);
+	return validateResponseDecorator({ ...data, hasError, errorMessage: ErrorMessage });
 }

@@ -1,17 +1,10 @@
-import { ErrorMessage, AT_LEAST_ONE_UNDERSCORE_REGEX } from './enums';
+import { ErrorMessage } from './enums';
+import { isUnderscoreError } from './is-underscore';
 import { ValidationRules } from '../types';
-import { statusByErrorAndPreviousState } from '../helpers/status.helper';
-import { errorMessagesByErrorAndPreviousState } from '../helpers/error-messages.helper';
+import { validateResponseDecorator } from '../helpers/validator-response.helper';
 
-function isUnderscoreError(payload?: string): boolean {
-	return payload && !AT_LEAST_ONE_UNDERSCORE_REGEX.test(payload);
-}
-
-export function validateHasUnderscore({ payload, status, errorMessages }: ValidationRules): ValidationRules {
-	const error = isUnderscoreError(payload);
-	return {
-		payload,
-		status: statusByErrorAndPreviousState(error, status),
-		errorMessages: errorMessagesByErrorAndPreviousState(error, ErrorMessage, errorMessages),
-	};
+export function validateHasUnderscore(data: ValidationRules): ValidationRules {
+	const { payload } = data;
+	const hasError = isUnderscoreError(payload);
+	return validateResponseDecorator({ ...data, hasError, errorMessage: ErrorMessage });
 }

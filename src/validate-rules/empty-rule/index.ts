@@ -1,17 +1,10 @@
 import { ErrorMessage } from './enums';
+import { isEmpty } from './is-empty';
 import { ValidationRules } from '../types';
-import { statusByErrorAndPreviousState } from '../helpers/status.helper';
-import { errorMessagesByErrorAndPreviousState } from '../helpers/error-messages.helper';
+import { validateResponseDecorator } from '../helpers/validator-response.helper';
 
-function isEmpty(payload?: string): boolean {
-	return !payload;
-}
-
-export function validateEmptyRule({ payload, status, errorMessages }: ValidationRules): ValidationRules {
-	const error = isEmpty(payload);
-	return {
-		payload,
-		status: statusByErrorAndPreviousState(error, status),
-		errorMessages: errorMessagesByErrorAndPreviousState(error, ErrorMessage, errorMessages),
-	};
+export function validateEmptyRule(data: ValidationRules): ValidationRules {
+	const { payload } = data;
+	const hasError = isEmpty(payload);
+	return validateResponseDecorator({ ...data, hasError, errorMessage: ErrorMessage });
 }

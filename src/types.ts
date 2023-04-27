@@ -1,4 +1,4 @@
-export type PasswordValidatorResponse = {
+export type PasswordValidator = {
 	status: boolean;
 	errorMessages?: string[];
 };

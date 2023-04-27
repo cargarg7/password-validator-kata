@@ -1,18 +1,11 @@
-import { ErrorMessage, MIN_LENGTH } from './enums';
+import { ErrorMessage } from './enums';
+import { isMinLengthError } from './is-min-length';
 import { ValidationRules } from '../types';
-import { statusByErrorAndPreviousState } from '../helpers/status.helper';
-import { errorMessagesByErrorAndPreviousState } from '../helpers/error-messages.helper';
+import { validateResponseDecorator } from '../helpers/validator-response.helper';
 
-function isMinLengthError(payload?: string): boolean {
-	return payload?.length < MIN_LENGTH;
-}
+export function validateMinLength(data: ValidationRules): ValidationRules {
+	const { payload } = data;
+	const hasError = isMinLengthError(payload);
 
-export function validateMinLength({ payload, status, errorMessages }: ValidationRules): ValidationRules {
-	const error = isMinLengthError(payload);
-
-	return {
-		payload,
-		status: statusByErrorAndPreviousState(error, status),
-		errorMessages: errorMessagesByErrorAndPreviousState(error, ErrorMessage, errorMessages),
-	};
+	return validateResponseDecorator({ ...data, hasError, errorMessage: ErrorMessage });
 }
