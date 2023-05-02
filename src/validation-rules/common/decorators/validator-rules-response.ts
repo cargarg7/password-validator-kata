@@ -1,6 +1,6 @@
-import { ValidateResponseCallbackInput, ValidationRules } from '../types';
-import { statusByErrorAndPreviousState } from './status.helper';
-import { errorMessagesByErrorAndPreviousState } from './error-messages.helper';
+import { ValidateResponseCallbackInput, ValidationRules } from '../types/validation-rules';
+import { statusByErrorAndPreviousState } from '../helpers/status-by-error-or-previous';
+import { errorMessagesByErrorAndPreviousState } from '../helpers/group-error-messages';
 
 export function validateResponseDecorator({
 	payload,

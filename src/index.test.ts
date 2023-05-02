@@ -2,10 +2,27 @@ import { passwordValidator } from './index';
 
 describe('Password Validator', () => {
 	it('Should get ERROR when null or empty string given', () => {
-		expect(passwordValidator()).toEqual({ status: false, errorMessages: ['Empty password is not valid'] });
+		expect(passwordValidator()).toEqual({
+			status: false,
+			errorMessages: [
+				'Empty password is not valid',
+				'Length must be greater or equalo to 6',
+				'Must be contain at least one number',
+				'Must be contain at least one upper case',
+				'Must be contain at least one lower case',
+				'Must be contain at least one underscore',
+			],
+		});
 		expect(passwordValidator('')).toEqual({
 			status: false,
-			errorMessages: ['Empty password is not valid', 'Length must be greater or equalo to 6'],
+			errorMessages: [
+				'Empty password is not valid',
+				'Length must be greater or equalo to 6',
+				'Must be contain at least one number',
+				'Must be contain at least one upper case',
+				'Must be contain at least one lower case',
+				'Must be contain at least one underscore',
+			],
 		});
 	});
 

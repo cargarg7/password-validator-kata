@@ -1,7 +1,7 @@
-import { ErrorMessage } from './enums';
+import { ValidationRules } from '../common/types/validation-rules';
+import { ErrorMessage } from './empty-error-message';
 import { isEmpty } from './is-empty';
-import { ValidationRules } from '../types';
-import { validateResponseDecorator } from '../helpers/validator-response.helper';
+import { validateResponseDecorator } from '../common/decorators/validator-rules-response';
 
 export function validateEmptyRule(data: ValidationRules): ValidationRules {
 	const { payload } = data;
