@@ -6,6 +6,5 @@ import { validateResponseDecorator } from '../common/decorators/validator-rules-
 export function validateHasLowercase(data: ValidationRules): ValidationRules {
 	const { payload } = data;
 	const hasError = !hasLowerCase(payload);
-	console.log('hasError hasLowerCase', hasError);
 	return validateResponseDecorator({ ...data, hasError, errorMessage: ErrorMessage });
 }
